@@ -25,8 +25,7 @@ var chartGroup = svg.append("g")
 
 
 d3.csv(path).then(function(state_data){
-    console.log(state_data);
-    // function state_smoking_levels(state_data) {
+    console.log("Overall data ", state_data);
     var smoking_level_array = [];
     var age_array = [];
     for (var i = 0; i < state_data.length; i++){
@@ -36,13 +35,53 @@ d3.csv(path).then(function(state_data){
         age_array.push(state_age);
 
     };
-    // return smoking_level_array;
-// }
+
+    var xScale = Math.max(...age_array);
+    console.log("x Scale  ", xScale);
+    xScale = Math.ceil(xScale) + 10;
+    console.log("x Scale rounded up + 10", xScale);
+
+
+    var yScale = Math.max(...smoking_level_array);
+    yScale = Math.ceil(yScale) + 10;
     
+    var bottomAxis = d3.axisBottom(xScale);
+    var leftAxis = d3.axisLeft(yScale);
+
+
+    var drawLine = d3.line()
+        .x(state_data=> xScale(age_array))
+        .y(state_data => yScale(smoking_level_array));
+
+   
+        chartGroup.append("path")
+        // The drawLine function returns the instructions for creating the line for forceData
+        .attr("d", drawLine(state_data))
+        .classed("scatter", true);
+    
+      // Append an SVG group element to the chartGroup, create the left axis inside of it
+      chartGroup.append("g")
+        .classed("axis", true)
+        .call(leftAxis);
+    
+      // Append an SVG group element to the chartGroup, create the bottom axis inside of it
+      // Translate the bottom axis to the bottom of the page
+      chartGroup.append("g")
+        .classed("axis", true)
+        .attr("transform", `translate(0, ${chartHeight})`)
+        .call(bottomAxis);
+    }).catch(function(error) {
+      console.log(error);
+    // svg.selectAll("dot")
+    //     .data(smoking_level_array)
+    //   .enter().append("circle")
+    //     .attr("r", 3.5)
+    //     .attr("cx", function(d) { return x(d.date); })
+    //     .attr("cy", function(d) { return y(d.close); });
    
 
-    console.log("Smoking level ", smoking_level_array);
-    console.log("Age: ", age_array);
+    // console.log("Smoking level ", smoking_level_array);
+    // console.log("Age: ", age_array);
 
 
 
