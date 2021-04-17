@@ -1,1 +1,2 @@
 # D3-challenge
+This activity consists of an analysis of certain health risks and and demographic characteristics. Using D3, data is collected and displayed into a plot format, with each state presented on the graph. 
